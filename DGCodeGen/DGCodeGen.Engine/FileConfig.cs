@@ -19,12 +19,12 @@ namespace DGCodeGen.Engine
         /// ASSUMING this is constructor called from the DGCommon assembly (e.g. as a console app)
         /// Reason being, this function uses Assembly.GetExecutingAssembly to populate the reference/filepath to CommonAssembly and filepath.
         /// </summary>
-        /// <param name="DynamoProjName"></param>
-        /// <param name="GrasshopperProjName"></param>
-        public FileConfig(string GrasshopperProjName, string DynamoProjName)
+        /// <param name="dynamoProjName"></param>
+        /// <param name="grasshopperProjName"></param>
+        public FileConfig(string grasshopperProjName, string dynamoProjName, string grasshopperNamespace)
         {
-            this.GrasshopperProjName = GrasshopperProjName;
-            this.DynamoProjName = DynamoProjName;
+            this.GrasshopperProjName = grasshopperProjName;
+            this.DynamoProjName = dynamoProjName;
 
             DGCommonAssembly = Assembly.GetEntryAssembly();
             var path = new Uri(DGCommonAssembly.CodeBase).LocalPath;
@@ -35,23 +35,25 @@ namespace DGCodeGen.Engine
             int solutionRootPosition = DGCommonProjectFilepath.LastIndexOf('\\');
             SolutionFilepath = DGCommonProjectFilepath.Substring(0, solutionRootPosition);
 
-            GrasshopperProjectFilepath = SolutionFilepath + "\\" + GrasshopperProjName;
+            GrasshopperProjectFilepath = SolutionFilepath + "\\" + grasshopperProjName;
 
             //Requires that the DGCommon project references the grasshopper project - such that the Lib.Grasshopper.dll is copied to the DGCommon bin folder
             //Also requires that the grasshopper project does not delete the dll (remove delete dll from build events).
-            GrasshopperAssembly = Assembly.LoadWithPartialName(GrasshopperProjName);
+            //TBC - 
+            //GrasshopperAssembly = Assembly.LoadWithPartialName(grasshopperProjName);
 
-            GrasshopperNamespace = GrasshopperAssembly.GetTypes().First().Namespace;
+            //TODO - Automatically read from the default namespace in the csproj file
+            GrasshopperNamespace = grasshopperNamespace;
         }
 
 
         /*    All filepaths exclude the trailing '\'    */
 
-        public string SolutionFilepath { get; private set; }
+        private string SolutionFilepath { get; set; }
 
         public Assembly DGCommonAssembly { get; private set; }
 
-        public Assembly GrasshopperAssembly { get; private set; }
+        //public Assembly GrasshopperAssembly { get; private set; }
 
         public string GrasshopperNamespace { get; private set; }
 

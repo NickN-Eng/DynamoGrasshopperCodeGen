@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -32,20 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GH_IO, Version=6.16.19190.7001, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="GH_IO">
       <HintPath>..\CustomPackages\GH_IO.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="Grasshopper, Version=6.16.19190.7001, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Grasshopper">
       <HintPath>..\CustomPackages\Grasshopper.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoCommon, Version=6.16.19190.7001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RhinoCommon">
       <HintPath>..\CustomPackages\RhinoCommon.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,6 +52,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateSomeData_Component.cs" />
+    <Compile Include="CreateSomeListData_Component.cs" />
+    <Compile Include="MultireturnTest_Component.cs" />
+    <Compile Include="SomeData.cs" />
+    <Compile Include="SplitValue_Component.cs" />
     <Compile Include="TestLibGrasshopperComponent.cs" />
     <Compile Include="TestLibInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

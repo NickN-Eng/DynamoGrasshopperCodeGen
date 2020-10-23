@@ -128,12 +128,12 @@ namespace DGCodeGen.Engine
             }
 
             //var typeConverter = App.TypeDictionary.Get(input.DGCommonType);
-            if (func.GrasshopperFunctionAttr != null && typeConverter.GrasshopperType == null)
+            if (func.GrasshopperFunctionAttr != null && typeConverter.GrasshopperTypeName == null)
                 AddError($"The input variable {input.ParameterName}, with type {input.DGCommonType} cannot be used in Grasshopper, " +
                     $"even though this function has been specified for Grasshopper through the GhFunc attribute. Please use an " +
                     $"alternative type or split this into two functions (one for Dynamo, and one for Grasshopper).");
 
-            if (func.DynamoFunctionAttr != null && typeConverter.DynamoType == null)
+            if (func.DynamoFunctionAttr != null && typeConverter.DynamoTypeName == null)
                 AddError($"The input variable {input.ParameterName}, with type {input.DGCommonType} cannot be used in Dynamo, " +
                     $"even though this function has been specified for Dynamo through the DyFunc attribute. Please use an " +
                     $"alternative type or split this into two functions (one for Dynamo, and one for Grasshopper).");
@@ -147,12 +147,12 @@ namespace DGCodeGen.Engine
                 return;
             }
 
-            if (func.GrasshopperFunctionAttr != null && typeConverter.GrasshopperType == null)
+            if (func.GrasshopperFunctionAttr != null && typeConverter.GrasshopperTypeName == null)
                 AddError($"The output variable {output.ParameterName}, with type {output.DGCommonType} cannot be used in Grasshopper, " +
                     $"even though this function has been specified for Grasshopper through the GhFunc attribute. Please use an " +
                     $"alternative type or split this into two functions (one for Dynamo, and one for Grasshopper).");
 
-            if (func.DynamoFunctionAttr != null && typeConverter.DynamoType == null)
+            if (func.DynamoFunctionAttr != null && typeConverter.DynamoTypeName == null)
                 AddError($"The output variable {output.ParameterName}, with type {output.DGCommonType} cannot be used in Dynamo, " +
                     $"even though this function has been specified for Dynamo through the DyFunc attribute. Please use an " +
                     $"alternative type or split this into two functions (one for Dynamo, and one for Grasshopper).");

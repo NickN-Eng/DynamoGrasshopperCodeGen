@@ -39,6 +39,10 @@ namespace DGCodeGen.Engine
                         IdentifierName("Generic"))),
                 UsingDirective(
                     QualifiedName(
+                        IdentifierName("System"),
+                        IdentifierName("Linq"))),
+                UsingDirective(
+                    QualifiedName(
                         IdentifierName("Grasshopper"),
                         IdentifierName("Kernel"))),
                 UsingDirective(
@@ -141,7 +145,7 @@ namespace DGCodeGen.Engine
 
         public ConstructorDeclarationSyntax ComponentConstructor(string name, string nickname, string description, string category, string subcategory)
         {
-            return ConstructorDeclaration(Identifier("CreateNode_Component")).WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+            return ConstructorDeclaration(Identifier(name + "_Component")).WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                         .WithInitializer(ConstructorInitializer(SyntaxKind.BaseConstructorInitializer, ArgumentList(SeparatedList<ArgumentSyntax>(new SyntaxNodeOrToken[]
                         {
                             Argument(LiteralExpression(SyntaxKind.StringLiteralExpression,Literal(name))),
@@ -154,7 +158,7 @@ namespace DGCodeGen.Engine
                             Token(SyntaxKind.CommaToken),
                             Argument(LiteralExpression(SyntaxKind.StringLiteralExpression,Literal(subcategory)))
                         }))))
-                        .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+                        .WithBody(Block());
         }
 
         private MemberDeclarationSyntax ExposureProperty()
@@ -316,7 +320,7 @@ namespace DGCodeGen.Engine
             //Then they will all be single line expressions... can use variableName_afterConv = variableName_prevConv.Select(item => Converter.VarTypeToVarType(item)).ToList();
 
             var typeCon = App.TypeDictionary.Get(inputData.DGCommonType);
-            if (typeCon.GrasshopperType == null)
+            if (typeCon.GrasshopperTypeName == null)
                 throw new Exception("This type converter does not provide a grasshopper type. Please use a different type for this input variable.");
 
             var variableName_afterConv = inputData.ParameterName;
@@ -325,7 +329,7 @@ namespace DGCodeGen.Engine
             bool conversionRequired = conversionStatements != null;
 
             var variableName_InDaGet = conversionRequired ? variableName_preConv : variableName_afterConv;
-            var variableType_gh = IdentifierName(typeCon.GrasshopperType.Name);
+            var variableType_gh = IdentifierName(typeCon.GrasshopperTypeName);
             var variableType = IdentifierName(inputData.DGCommonType.Name);
             if (inputData.IsList)
             {
@@ -368,7 +372,7 @@ namespace DGCodeGen.Engine
             //Then they will all be single line expressions... can use variableName_afterConv = variableName_prevConv.Select(item => Converter.VarTypeToVarType(item)).ToList();
 
             var typeCon = App.TypeDictionary.Get(outputData.DGCommonType);
-            if (typeCon.GrasshopperType == null)
+            if (typeCon.GrasshopperTypeName == null)
                 throw new Exception("This type converter does not provide a grasshopper type. Please use a different type for this output variable.");
 
             var variableName_preConv = outputData.ParameterName;
@@ -378,7 +382,7 @@ namespace DGCodeGen.Engine
 
             var variableName_InDaSet = conversionRequired ? variableName_afterConv : variableName_preConv;
             var variableType = IdentifierName(outputData.DGCommonType.Name);
-            var variableType_gh = IdentifierName(typeCon.GrasshopperType.Name);
+            var variableType_gh = IdentifierName(typeCon.GrasshopperTypeName);
 
             var comment = $"//Setting node output: {variableName_preConv}.";
 
@@ -391,7 +395,7 @@ namespace DGCodeGen.Engine
 
                     var itemConversionExpression = typeCon.ConversionCode_DGCommonToGh("item").ExpressionNode;
                     var listConversionExpression = CallMethodOnObject(variableName_preConv, "Select", Argument(LambdaExpr("item", itemConversionExpression))).CallMethodOnExpr("ToList");
-                    var listConversionStatement = listConversionExpression.AssignToNewVariable(ListType(variableType), variableName_afterConv).ToStatement();
+                    var listConversionStatement = listConversionExpression.AssignToNewVariable(ListType(variableType_gh), variableName_afterConv).ToStatement();
                     listConversionStatement = listConversionStatement.WithLeadingTrivia(CommentTriv(comment));
 
                     statementsToAppend.Add(listConversionStatement);

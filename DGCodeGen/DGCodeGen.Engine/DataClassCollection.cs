@@ -37,6 +37,7 @@ namespace DGCodeGen.Engine
                     continue;
 
                 var dataclass = new DataClass();
+                dataclass.DGCommonDataclassType = typ;
                 dataclass.Namespace = typ.Namespace;
                 dataclass.Classname = typ.Name;
                 dataclass.GhDataClass = ghDataclass;
@@ -71,6 +72,7 @@ namespace DGCodeGen.Engine
 
     public class DataClass : ICodeItem
     {
+        public Type DGCommonDataclassType;
         public string Classname;
         public string Name => Classname;
         public string Namespace;

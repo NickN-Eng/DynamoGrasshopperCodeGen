@@ -56,5 +56,14 @@ namespace DGCodeGen.Engine
             //return result;
             return TypeConverters[DGCommonType];
         }
+
+        public void AddDataClasses(DataClassCollection dataClassCollection)
+        {
+            foreach (var dataclass in dataClassCollection.DataClasses)
+            {
+                var dataclassType = dataclass.DGCommonDataclassType;
+                TypeConverters[dataclassType] = new DataclassConversion(dataclassType);
+            }
+        }
     }
 }

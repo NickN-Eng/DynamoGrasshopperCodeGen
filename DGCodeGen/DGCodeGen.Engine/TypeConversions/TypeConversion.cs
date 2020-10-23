@@ -12,13 +12,13 @@ namespace DGCodeGen.TypeConversions
         /// Type which is used in the Grasshopper library. 
         /// Return null if this type CANNOT be used in grasshopper
         /// </summary>
-        public abstract Type GrasshopperType { get; }
+        public abstract string GrasshopperTypeName { get; }
 
         /// <summary>
         /// Type which is used in the Dynamo library. 
         /// Return null if this type CANNOT be used in Dynamo
         /// </summary>
-        public abstract Type DynamoType { get; }
+        public abstract string DynamoTypeName { get; }
 
         /// <summary>
         /// Code to convert from the DGCommon type to a Grasshopper type.
@@ -73,6 +73,7 @@ namespace DGCodeGen.TypeConversions
         /// <summary>
         /// The parameter name for this GhGoo type. Only required for custom parameters.
         /// If this GhGoo has a predefined parameter (e.g. Integer), the parameter type is not required, return null.
+        /// For example, A dataclass of SomeClass_Goo will have a parameter name of SomeClass_Param.
         /// </summary>
         public abstract string Gh_CustomParameterName { get; }
     }
@@ -80,17 +81,19 @@ namespace DGCodeGen.TypeConversions
     public abstract class TypeConversionBase<DGComType, GhType, DyType> : TypeConversion
     {
         public override Type DGCommonType => typeof(DGComType);
-        public override Type GrasshopperType => typeof(GhType);
-        public override Type DynamoType => typeof(DyType);
+        public override string GrasshopperTypeName => GrasshopperType.Name;
+        public override string DynamoTypeName => DynamoType.Name;
+        public Type GrasshopperType => typeof(GhType);
+        public Type DynamoType => typeof(DyType);
     }
 
     public abstract class DynamoOnlyTypeConversion<DyType> : TypeConversion
     {
         public override Type DGCommonType => typeof(DyType);
 
-        public override Type GrasshopperType => null;
-
-        public override Type DynamoType => typeof(DyType);
+        public override string GrasshopperTypeName => null;
+        public override string DynamoTypeName => DynamoType.Name;
+        public Type DynamoType => typeof(DyType);
 
         public override SingleLineEvaluationStatements ConversionCode_DGCommonToDy(string variableName) => null;
 

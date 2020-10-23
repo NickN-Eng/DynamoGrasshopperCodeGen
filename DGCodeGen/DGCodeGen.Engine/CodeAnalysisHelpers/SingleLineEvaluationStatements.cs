@@ -40,6 +40,12 @@ namespace DGCodeGen.Engine
 
         //public string ReturnTypeFullName;
 
+        public SingleLineEvaluationStatements(ExpressionSyntax expressionNode, string returnTypeName)
+        {
+            ExpressionNode = expressionNode;
+            ReturnTypeSyntax = SyntaxHelper.NamedType(returnTypeName);
+        }
+
         public SingleLineEvaluationStatements(ExpressionSyntax expressionNode, TypeSyntax returnTypeSyntax)
         {
             ExpressionNode = expressionNode;
@@ -58,15 +64,33 @@ namespace DGCodeGen.Engine
         /// </summary>
         public static SingleLineEvaluationStatements FromCodeExpression(string codeAsExpression, Type returnType)
         {
+            SyntaxNode expressionNode = ParseCode(codeAsExpression);
+
+            var singleExpression = new SingleLineEvaluationStatements((ExpressionSyntax)expressionNode, returnType);
+            return singleExpression;
+        }
+
+        /// <summary>
+        /// Parse C# code which is a single line expression which evaluates to the provided type.
+        /// The code exclude the semi colon.
+        /// </summary>
+        public static SingleLineEvaluationStatements FromCodeExpression(string codeAsExpression, string returnTypeName)
+        {
+            SyntaxNode expressionNode = ParseCode(codeAsExpression);
+
+            var singleExpression = new SingleLineEvaluationStatements((ExpressionSyntax)expressionNode, returnTypeName);
+            return singleExpression;
+        }
+
+        private static SyntaxNode ParseCode(string codeAsExpression)
+        {
             var tree = CSharpSyntaxTree.ParseText(codeAsExpression, new CSharpParseOptions(kind: SourceCodeKind.Script));
             //var debugNodeList = tree.GetRoot().DescendantNodes();
             var expressionNode = tree.GetRoot().DescendantNodes().FirstOrDefault(node => node is ExpressionSyntax);
             if (expressionNode == null)
                 throw new Exception("Expression string does not contain an expression syntax node. Sytax contained is "
                     + string.Join(",", tree.GetRoot().ChildNodes().Select(node => node.Kind().ToString()).ToArray()));
-
-            var singleExpression = new SingleLineEvaluationStatements((ExpressionSyntax)expressionNode, returnType);
-            return singleExpression;
+            return expressionNode;
         }
 
         public static SingleLineEvaluationStatements FromArrowExpressionMethod(MethodDeclarationSyntax methodSyntax)

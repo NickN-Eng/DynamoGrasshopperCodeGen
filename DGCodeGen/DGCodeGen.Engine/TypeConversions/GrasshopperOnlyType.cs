@@ -12,9 +12,9 @@ namespace DGCodeGen.TypeConversions
     {
         public override Type DGCommonType => typeof(GhType);
 
-        public override Type GrasshopperType => typeof(GhType);
-
-        public override Type DynamoType => null;
+        public override string GrasshopperTypeName => GrasshopperType.Name;
+        public override string DynamoTypeName => null;
+        public Type GrasshopperType => typeof(GhType);
 
         public override SingleLineEvaluationStatements ConversionCode_DGCommonToDy(string variableName) => throw new NotImplementedException();
 

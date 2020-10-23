@@ -12,11 +12,9 @@ namespace DGCodeGen.TypeConversions
     /// <typeparam name="GhParam"></typeparam>
     public abstract class DyAndGhGooConversion<DGComType, GhGoo> : TypeConversionBase<DGComType, GhGoo, DGComType>
     {
-        public string Gh_GooName => GrasshopperType.Name;
-
         public override SingleLineEvaluationStatements ConversionCode_DGCommonToGh(string variableName)
         {
-            return SingleLineEvaluationStatements.FromCodeExpression($"new {Gh_GooName}({variableName})", typeof(GhGoo));
+            return SingleLineEvaluationStatements.FromCodeExpression($"new {GrasshopperTypeName}({variableName})", typeof(GhGoo));
         }
 
         public override SingleLineEvaluationStatements ConversionCode_DGCommonToDy(string variableName) => null;

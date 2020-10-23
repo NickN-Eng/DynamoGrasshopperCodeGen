@@ -29,7 +29,7 @@ namespace DGCodeGen.TypeConversions
     {
         public override SingleLineEvaluationStatements Gh_GetInitialisationDefault()
         {
-            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)), GrasshopperType);
+            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)), GrasshopperTypeName);
         }
          
         public override string Gh_AddParameterMethodName => "AddIntegerParameter";
@@ -43,7 +43,7 @@ namespace DGCodeGen.TypeConversions
     {
         public override SingleLineEvaluationStatements Gh_GetInitialisationDefault()
         {
-            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)), GrasshopperType);
+            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)), GrasshopperTypeName);
         }
 
         public override string Gh_AddParameterMethodName => "AddNumberParameter";
@@ -56,7 +56,7 @@ namespace DGCodeGen.TypeConversions
     {
         public override SingleLineEvaluationStatements Gh_GetInitialisationDefault()
         {
-            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.TrueKeyword), GrasshopperType);
+            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.TrueKeyword), GrasshopperTypeName);
         }
 
         public override string Gh_AddParameterMethodName => "AddBooleanParameter";
@@ -69,7 +69,7 @@ namespace DGCodeGen.TypeConversions
     {
         public override SingleLineEvaluationStatements Gh_GetInitialisationDefault()
         {
-            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.StringLiteralExpression,Literal("")), GrasshopperType);
+            return new SingleLineEvaluationStatements(LiteralExpression(SyntaxKind.StringLiteralExpression,Literal("")), GrasshopperTypeName);
         }
 
         public override string Gh_AddParameterMethodName => "AddTextParameter";

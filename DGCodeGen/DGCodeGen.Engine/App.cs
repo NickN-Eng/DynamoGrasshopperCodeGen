@@ -20,18 +20,20 @@ namespace DGCodeGen.Engine
 
         public TypeDictionary TypeDictionary;
 
-        public void Run()
+        public void Run(FileConfig fileConfig)
         {
             Console.WriteLine("## Dynamo-Grasshopper Code Generation ##");
             Console.WriteLine();
 
-            FileConfig = new FileConfig("TestLib.Grasshopper", "Dyn");
+            FileConfig = fileConfig;
+            
             AssemblyAndProjData = new AssemblyAndProjData(FileConfig);
 
             TypeDictionary = new TypeDictionary();
             TypeDictionary.LoadTypeOverrides(AssemblyAndProjData);
 
             var options = new List<(string optionText, Action action)>();
+             
 
             //#DATACLASSES#
             //Load dataclasses
@@ -41,6 +43,7 @@ namespace DGCodeGen.Engine
             var dataclassChecker = new DataClassChecker(this);
             bool DataclassCheckPassed = dataclassChecker.Parse(DataClasses);
             dataclassChecker.WriteToConsole();
+            TypeDictionary.AddDataClasses(DataClasses);
             //Add dataclass writing options (if check passed)
             if(DataclassCheckPassed)
                 options.Add(("Write/Update dataclasses", () => DataClassWriter_Grasshopper.QuickWriteAll(this, DataClasses)));
