@@ -7,6 +7,7 @@ using DGCodeGen.Engine;
 namespace DGCodeGen.TypeConversions
 {
     /// <summary>
+    /// NOT SUPPORTED!
     /// This class is meant to be implemented in the DGCommon library, with strongly typed code.
     /// The Rosyln C# code reader can then convert it into a TypeConverter.
     /// </summary>

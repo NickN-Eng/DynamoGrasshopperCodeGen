@@ -102,8 +102,8 @@ namespace DGCodeGen.Engine
 
         private CompilationUnitSyntax Generate(DataClass dc)
         {
-            string className = FirstCharToUpper(dc.Classname); //ensure that className is Capitalised, so that classNameCamel =/= className
-            string classNameCamel = FirstCharToLower(dc.Classname);
+            string className = dc.Classname.FirstCharToUpper(); //ensure that className is Capitalised, so that classNameCamel =/= className
+            string classNameCamel = dc.Classname.FirstCharToLower();
             string guid = dc.GetGhGuid();
             string nickName = dc.GhDataClass.NickName;
             string description = dc.DGDescription.Description;
@@ -154,20 +154,5 @@ namespace DGCodeGen.Engine
             return null;
         }
 
-        private string FirstCharToUpper(string str)
-        {
-            if (str.Length == 1)
-                return str.ToUpper();
-            else
-                return char.ToUpper(str[0]) + str.Substring(1);
-        }
-
-        private string FirstCharToLower(string str)
-        {
-            if (str.Length == 1)
-                return str.ToLower();
-            else
-                return char.ToLower(str[0]) + str.Substring(1);
-        }
     }
 }

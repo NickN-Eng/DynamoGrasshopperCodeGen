@@ -89,12 +89,19 @@ Node input parameters can be specified by adding input parameter in your method.
 
 Node output parameters are specified in the method return value. For components with a return parameter, you must specify `[DGOutput()]`. Components with multiple return values can use a tuple return. Each tuple return value must have a corresponding `[DGOutput()]` attribute tagged onto the method.
 
-
 # Defining dataclasses
 
 POCO's can be tagged with the `[GhDataClass()]` attribute, causing Gh Goo's and Grasshopper Parameters to be automatically generated. When defining functions, you need only to refer to the POCO object. DGCodeGen will generate code to wrap/unwrap these for the inputs/outputs.
 
 Every dataclass must also be tagged with `[DGDescription()]`.
+
+# Input and output datatypes
+
+* Types used within DGCommon are automatically converted to native types used in grasshopper. For example, the raw POCO dataclass class can be used in DGCommon. DGCodeGen will automatically write code to wrap a dataclass into a grasshopper Goo<dataclass>
+* This applies to lists as well. For example, an input dataclass will be converted to a list of dataclass_goo's:  
+  `List<Dataclass_Goo> dataclassList_gh = dataclassList.Select(obj => new DataClass_Goo(obj));` 
+* Every type used as an input/output parameter must have an appropriate `TypeConversion` class. This tells DGCodeGen how this type can be added to a Grasshopper node. To add new types, it is necessary to inherit from `TypeConversion` or one of the child classes, and add that type to the `TypeDictionary`.
+* More complex data structures such as nested lists, or grasshopper datatrees are not supported by this conversion.
 
 # File management
 
@@ -102,3 +109,11 @@ Every dataclass must also be tagged with `[DGDescription()]`.
 * The generated files will be located within a subfolder of each Dynamo/Grasshopper project called DGCodeGen.
 * Files in .../DGCodeGen are overwritten on each run. To avoid overwriting edited files, move them out of this folder.
 * Grasshopper component guids are automatically generated, and are saved in the method definition, under the `[GhGuid()]` attribute. This means that the .cs file defining each method may be overwritten during the running of this tool. Deleting this saved attribute will cause the tool to generate a new Guid.
+
+# Todo
+
+- [ ] Improve writing functions to Dynamo, which currently has very limited support. Basic features which are not currently supported include List types, Dataclasses etc...
+- [ ] Error checking
+- [ ] A standalone app/visual studio integration
+- [ ] Selectively update functions/dataclasses. E.g. through marking with attributes.
+- [ ] Allow users to add additional supported types in the from within the DGCommon library. E.g. by scanning for TypeConversions/TypeTemplates.

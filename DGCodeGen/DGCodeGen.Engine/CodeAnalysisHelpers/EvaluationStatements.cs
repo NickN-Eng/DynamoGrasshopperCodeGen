@@ -37,6 +37,9 @@ namespace DGCodeGen.Engine
         public abstract ExpressionSyntax CreateStatementsAsExpression();
         public abstract List<StatementSyntax> CreateStatementsAsTupleVariables(string[] variableNames);
 
+        public abstract List<StatementSyntax> CreateRawStatements();
+
+
         public static EvaluationStatements FromMethod(MethodDeclarationSyntax methodDeclarationSyntax)
         {
             if (methodDeclarationSyntax.Body == null)

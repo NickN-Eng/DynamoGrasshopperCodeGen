@@ -50,7 +50,11 @@ namespace DGCodeGen.Engine
                     func.DescriptionAttr = (DGDescription)Attribute.GetCustomAttribute(meth, typeof(DGDescription));
                     func.ExistingGuidAttr = (GhGuid)Attribute.GetCustomAttribute(meth, typeof(GhGuid));
                     func.Namespace = typ.Namespace;
-                    func.ParentClass = typ; 
+                    func.ParentClass = typ;
+
+                    //If the FunctionAttr have a null name, use the method name instead
+                    if (func.GrasshopperFunctionAttr != null && string.IsNullOrEmpty(func.GrasshopperFunctionAttr.Name)) func.GrasshopperFunctionAttr.Name = meth.Name;
+                    if (func.DynamoFunctionAttr != null && string.IsNullOrEmpty(func.DynamoFunctionAttr.Name)) func.DynamoFunctionAttr.Name = meth.Name;
 
                     //Parse input parameters
                     var inputs = new List<InputData>();
@@ -71,7 +75,8 @@ namespace DGCodeGen.Engine
                     var outputs = new List<OutputData>();
                     func.Outputs = outputs;
                     var returnParm = meth.ReturnParameter;
-                    if (ReflectionHelper.IsValueTuple(returnParm.ParameterType))
+                    if (returnParm.ParameterType.FullName == "System.Void") { }
+                    else if (ReflectionHelper.IsValueTuple(returnParm.ParameterType))
                     {
                         foreach (var tupleParam in returnParm.ParameterType.GetFields())
                         {

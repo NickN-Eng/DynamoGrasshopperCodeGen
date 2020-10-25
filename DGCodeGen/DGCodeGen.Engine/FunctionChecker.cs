@@ -115,6 +115,8 @@ namespace DGCodeGen.Engine
 
         private void CheckFunctionBodyReturnStatement(FunctionData func)
         {
+            if (func.Outputs.Count == 0) return; //Dont do this check if there is no return variable
+
             if (!func.FunctionBody.CanCreateStatementsAsVariable)
                 AddError($"The function code needs to have only ONE return statement. Also in needs to be the LAST statement in the body block.");
         }
@@ -163,30 +165,5 @@ namespace DGCodeGen.Engine
         /// </summary>
         /// <param name="message"></param>
         private void AddError(string message) => AddError(message, CurrentFunction);
-
-        //private void AddError(string message, FunctionData function)
-        //{
-        //    ErrorCount++;
-        //    if (ErrorMessages.ContainsKey(function))
-        //        ErrorMessages[function].Add(message);
-        //    else
-        //        ErrorMessages[function] = new List<string>() { message };
-        //}
-
-        //public void WriteToConsole()
-        //{
-        //    Console.WriteLine($"Functions have a total of {ErrorCount} errors.");
-        //    if(ErrorMessages.Count > 0) Console.WriteLine();
-
-        //    foreach (var kvp in ErrorMessages)
-        //    {
-        //        Console.WriteLine($"<{kvp.Key.MethodName}> at {kvp.Key.CodeDocument.FilePath}");
-        //        foreach (var message in kvp.Value)
-        //        {
-        //            Console.WriteLine(message);
-        //        }
-        //        Console.WriteLine();
-        //    }
-        //}
     }
 }

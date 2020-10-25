@@ -22,7 +22,7 @@ namespace TestLib.Grasshopper
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new SomeData_Param(), "SomeData", "SD", "", GH_ParamAccess.item);
+            pManager.AddParameter(new SomeData_Param(), "SomeData", "SD", "Description", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

@@ -29,6 +29,7 @@ namespace DGCodeGen.Engine
             
             AssemblyAndProjData = new AssemblyAndProjData(FileConfig);
 
+            //Was having an error with loading RhinoCommon. Needed to manually copy RhinoCommon from nuget directory into bin folder.
             TypeDictionary = new TypeDictionary();
             TypeDictionary.LoadTypeOverrides(AssemblyAndProjData);
 
@@ -45,8 +46,11 @@ namespace DGCodeGen.Engine
             dataclassChecker.WriteToConsole();
             TypeDictionary.AddDataClasses(DataClasses);
             //Add dataclass writing options (if check passed)
-            if(DataclassCheckPassed)
-                options.Add(("Write/Update dataclasses", () => DataClassWriter_Grasshopper.QuickWriteAll(this, DataClasses)));
+            if (DataclassCheckPassed)
+            {
+                if(FileConfig.HasGrasshopper)
+                    options.Add(("Write/Update grasshopper dataclasses", () => DataClassWriter_Grasshopper.QuickWriteAll(this, DataClasses)));
+            }
             else
                 Console.WriteLine("Data class errors need to be fixed before writing them.");
 
@@ -66,9 +70,24 @@ namespace DGCodeGen.Engine
             functionChecker.WriteToConsole();
             //Add function writing options (if check passed)
             if (FunctionCheckPassed)
-                options.Add(  ("Write/Update functions", () => FunctionWriter_Grasshopper.QuickWriteAll(this, Functions)  )  );
+            {
+                if (FileConfig.HasGrasshopper)
+                    options.Add(  ("Write/Update grasshopper functions", () => FunctionWriter_Grasshopper.QuickWriteAll(this, Functions)  )  );
+
+                if (FileConfig.HasDynamo)
+                    options.Add(("Write/Update dynamo functions", () => FunctionWriter_Dynamo.QuickWriteAll(this, Functions)));
+            }
             else
                 Console.WriteLine("Function errors need to be fixed before writing functions.");
+
+            if (DataclassCheckPassed && FunctionCheckPassed)
+            {
+                options.Add(("Write/Update dataclasses & functions", 
+                    () =>   { 
+                                DataClassWriter_Grasshopper.QuickWriteAll(this, DataClasses); 
+                                FunctionWriter_Grasshopper.QuickWriteAll(this, Functions); 
+                            }));
+            }
 
             Console.WriteLine();
             Console.WriteLine("# Actions!");

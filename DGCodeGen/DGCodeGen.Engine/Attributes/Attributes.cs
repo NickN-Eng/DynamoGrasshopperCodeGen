@@ -28,18 +28,16 @@ namespace DGCodeGen.Attributes
         public string Name;
         public string NickName;
         public string Parent;
-        public string Grandparent;
 
-        public DGFunc(string name, string nickName, string parent, string grandparent)
+        public DGFunc(string name, string nickName, string parent)
         {
             Name = name;
             NickName = nickName;
             Parent = parent;
-            Grandparent = grandparent;
         }
 
-        public DyFunc ToDyFunc() => new DyFunc(Name, Parent, Grandparent);
-        public GhFunc ToGhFunc() => new GhFunc(Name, NickName, Parent, Grandparent);
+        public DyFunc ToDyFunc() => new DyFunc(Name, Parent);
+        public GhFunc ToGhFunc() => new GhFunc(Name, NickName, Parent);
     }
 
     /// <summary>
@@ -50,13 +48,11 @@ namespace DGCodeGen.Attributes
     {
         public string Name;
         public string Parent;
-        public string Grandparent;
 
-        public DyFunc(string name, string parent, string grandparent)
+        public DyFunc(string name, string parent)
         {
             Name = name;
             Parent = parent;
-            Grandparent = grandparent;
         }
     }
 
@@ -69,14 +65,12 @@ namespace DGCodeGen.Attributes
         public string Name;
         public string NickName;
         public string Subcategory;
-        public string Category;
 
-        public GhFunc(string name, string nickName, string category, string subcategory)
+        public GhFunc(string name, string nickName, string subcategory)
         {
             Name = name;
             NickName = nickName;
             Subcategory = subcategory;
-            Category = category;
         }
     }
 

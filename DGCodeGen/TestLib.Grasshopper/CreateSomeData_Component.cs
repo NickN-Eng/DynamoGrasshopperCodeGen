@@ -17,12 +17,12 @@ namespace TestLib.Grasshopper
         public override Guid ComponentGuid => new Guid("ad7c0bdf-32f9-4be3-80ae-1bc44a7d9641");
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddIntegerParameter("Integer", "I", "Desc", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Integer", "I", "Description", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new SomeData_Param(), "SomeData", "SD", "", GH_ParamAccess.item);
+            pManager.AddParameter(new SomeData_Param(), "SomeData", "SD", "Description", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -31,9 +31,11 @@ namespace TestLib.Grasshopper
             Int32 intValue = 0;
             if (!DA.GetData(0, ref intValue))
                 return;
+
             //Function body
             var newSomeData = new SomeData(intValue);
             SomeData result = newSomeData;
+
             //Setting node output: result.
             SomeData_Goo result_gh = new SomeData_Goo(result);
             DA.SetData(0, result_gh);

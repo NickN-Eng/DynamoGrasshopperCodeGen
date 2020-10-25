@@ -116,7 +116,7 @@ namespace DGCodeGen.Engine
                 functionData.GrasshopperFunctionAttr.Name,
                 functionData.GrasshopperFunctionAttr.NickName,
                 functionData.DescriptionAttr.Description,
-                functionData.GrasshopperFunctionAttr.Category,
+                App.FileConfig.ToolName,
                 functionData.GrasshopperFunctionAttr.Subcategory
                 );
             ClassElements.Add(constructor);
@@ -279,11 +279,17 @@ namespace DGCodeGen.Engine
 
             //Put in function eval statements
             var functionEvalStatements = functionData.FunctionBody;
-            if (!functionEvalStatements.CanCreateStatementsAsVariable)
-                throw new Exception("Functions must be written so that there is only 1 return statement, at the END of the function.");
+
+            //Now checked in the FunctionChecker
+            //if (!functionEvalStatements.CanCreateStatementsAsVariable)
+            //    throw new Exception("Functions must be written so that there is only 1 return statement, at the END of the function.");
 
             List<StatementSyntax> funcStatementList;
-            if (functionEvalStatements.IsTupleReturn)
+            if (functionData.Outputs.Count == 0)
+            {
+                funcStatementList = functionEvalStatements.CreateRawStatements();
+            }
+            else if (functionEvalStatements.IsTupleReturn)
             {
                 var tupleNames = functionData.Outputs.Select(output => output.ParameterName).ToArray();
                 funcStatementList = functionEvalStatements.CreateStatementsAsTupleVariables(tupleNames);

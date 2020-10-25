@@ -163,6 +163,9 @@ namespace DGCodeGen.Engine
             return statements;
         }
 
-
+        public override List<StatementSyntax> CreateRawStatements()
+        {
+            return new List<StatementSyntax>() { ExpressionStatement(ExpressionNode) };
+        }
     }
 }

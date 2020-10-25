@@ -16,7 +16,7 @@ namespace TestLib.DGCommon
         static void Main(string[] args)
         {
             var app = new App();
-            var fileConf = new FileConfig("TestLib.Grasshopper", "Dyn", "TestLib.Grasshopper");
+            var fileConf = new FileConfig("TestLib.Grasshopper", "TestLib.Dynamo", "TestLib.Grasshopper", "TestLib.Dynamo", "TestLib");
             app.Run(fileConf);
 
         }

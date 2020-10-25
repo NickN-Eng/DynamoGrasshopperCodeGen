@@ -1,4 +1,5 @@
 using DGCodeGen.Attributes;
+using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,14 @@ namespace TestLib.DGCommon
     /// </summary>
     public class Functions
     {
-        [GhFunc("SplitValue", "SV", "TestLib", "SomeDataTests")]
+        [DGFunc(null, "SV", "SomeDataTests")]
+        [DGDescription("Some description")]
+        public static void VoidReturnTest([DGInput("Value", "V", "Desc")] double value)
+        {
+            double x = value * 2;
+        }
+
+        [DGFunc("SplitValue", "SV", "SomeDataTests")]
         [DGDescription("Some description")]
         [DGOutput("FirstValue", "FV", "fv")]
         [DGOutput("SecondValue", "SV", "sv")]
@@ -26,20 +34,18 @@ namespace TestLib.DGCommon
             return (halfValue, halfValue);
         }
 
-        [GhFunc("CreateSomeData", "CSD", "TestLib", "SomeDataTests")]
+        [DGFunc("CreateSomeData", "CSD", "SomeDataTests")]
         [DGDescription("Some description")]
-        [DGOutput("SomeData", "SD", "")]
+        [DGOutput("SomeData", "SD", "Description")]
         [GhGuid("ad7c0bdf-32f9-4be3-80ae-1bc44a7d9641")]
-        public static SomeData CreateSomeData(
-            [DGInput("Integer", "I", "Desc")] int intValue
-            )
+        public static SomeData CreateSomeData([DGInput("Integer", "I", "Desc")] int intValue)
         {
             var newSomeData = new SomeData(intValue);
             return newSomeData;
         }
 
 
-        [GhFunc("CreateSomeListData", "CSD", "TestLib", "SomeDataTests")]
+        [DGFunc("CreateSomeListData", "CSD", "SomeDataTests")]
         [DGDescription("Some description")]
         [DGOutput("SomeDataList", "SD", "")]
         [GhGuid("4a774ae2-cb29-4f54-976d-05b0598d1484")]
@@ -51,7 +57,7 @@ namespace TestLib.DGCommon
             return newSomeData;
         }
 
-        [GhFunc("MultireturnTest", "CSD", "TestLib", "SomeDataTests")]
+        [DGFunc("MultireturnTest", "CSD", "SomeDataTests")]
         [DGDescription("Some description")]
         [DGOutput("Value1", "SD", "")]
         [DGOutput("Value2", "SD", "")]
@@ -63,6 +69,14 @@ namespace TestLib.DGCommon
         {
             var newSomeData = intList.Select(i => new SomeData(i)).ToList();
             return (1, 2, newSomeData);
+        }
+
+        [GhFunc("CreatePointTest", "CPT", "GeometryTests")]
+        [DGDescription("Some description")]
+        [DGOutput("Point", "Pt", "Description")]
+        public static Point3d CreatePointTest([DGInput("XYZ value", "XYZ", "Desc")] double value)
+        {
+            return new Point3d(value, value, value);
         }
     }
 

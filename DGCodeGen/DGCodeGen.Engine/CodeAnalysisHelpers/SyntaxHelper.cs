@@ -61,6 +61,9 @@ namespace DGCodeGen.Engine
             return TriviaList( Comment(comment));
         }
 
+
+        public static TypeSyntax DictType(TypeSyntax keyType, TypeSyntax valueType) => GenericName(Identifier("Dictionary")).WithTypeArgumentList(TypeArgumentList(ListCommaSep(keyType, valueType)));
+
         public static PredefinedTypeSyntax PredefType(SyntaxKind syntaxKind) =>     PredefinedType(Token(syntaxKind));
         public static TypeSyntax ListType(string genericArg) =>                     GenericName(Identifier("List")).WithTypeArgumentList(TypeArgumentList(SingletonSeparatedList(NamedType(genericArg))));
         public static TypeSyntax ListType(TypeSyntax genericType) =>                GenericName(Identifier("List")).WithTypeArgumentList(TypeArgumentList(SingletonSeparatedList(genericType)));
@@ -74,6 +77,7 @@ namespace DGCodeGen.Engine
         public static AttributeArgumentSyntax AttrNumberArg(int value) =>           AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(value)));
         public static AttributeArgumentSyntax AttrNumberArg(double value) =>        AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(value)));
         public static AttributeArgumentSyntax AttrNamedArg(string variableName) =>  AttributeArgument(IdentifierName(variableName));
+        public static ExpressionSyntax StringExpr(string str) =>                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(str));
 
 
         public static ArgumentListSyntax ArgList(params ArgumentSyntax[] args) => ArgumentList(SeparatedList(args));
@@ -93,9 +97,20 @@ namespace DGCodeGen.Engine
         /// (type1 name1, type2 name2, etc...). 
         /// Leaving empty creates emtpy list ()
         /// </summary>
-        public static ParameterListSyntax ParamList(params (string name, TypeSyntax typeSyn)[] parameterPairs)
+        public static ParameterListSyntax ParamList(params (string varName, string typeName)[] parameterPairs)
         {
-            var parameters = parameterPairs.Select(p => Parameter(Identifier(p.name)).WithType(p.typeSyn));
+            var parameters = parameterPairs.Select(p => Parameter(Identifier(p.varName)).WithType(NamedType(p.typeName)));
+            return ParameterList(SeparatedList(parameters));
+        }
+
+        /// <summary>
+        /// Create a parameter list for a method declaration: 
+        /// (type1 name1, type2 name2, etc...). 
+        /// Leaving empty creates emtpy list ()
+        /// </summary>
+        public static ParameterListSyntax ParamList(params (string varName, TypeSyntax typeSyn)[] parameterPairs)
+        {
+            var parameters = parameterPairs.Select(p => Parameter(Identifier(p.varName)).WithType(p.typeSyn));
             return ParameterList(SeparatedList(parameters));
         }
 
@@ -204,6 +219,35 @@ namespace DGCodeGen.Engine
         public static AttributeListSyntax AttributeWithArgs(string attributeName, params AttributeArgumentSyntax[] args)
         {
             return AttributeList(SingletonSeparatedList(Attribute(IdentifierName(attributeName)).WithArgumentList(AttrArgList(args))));
+        }
+
+
+        public static SeparatedSyntaxList<TNode> ListCommaSep<TNode>(params TNode[] items) where TNode : SyntaxNode
+        {
+            return SeparatedList(items.ToArray());
+        }
+
+
+        
+
+        public static ExpressionSyntax CreateNewDictionary(TypeSyntax keyType, TypeSyntax valueType, params (ExpressionSyntax keyExpr, ExpressionSyntax valueExpr)[] initializerPairs)
+        {
+            var dictResult = ObjectCreationExpression(GenericName(Identifier("Dictionary"))
+                                .WithTypeArgumentList(TypeArgumentList(ListCommaSep(keyType, valueType))))
+                                .WithArgumentList(ArgumentList());
+
+            if (initializerPairs.Length == 0) return dictResult;
+
+            ExpressionSyntax[] dictItems = new ExpressionSyntax[initializerPairs.Length];
+            for (int i = 0; i < initializerPairs.Length; i++)
+            {
+                var kvp = initializerPairs[i];
+                dictItems[i] = InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, ListCommaSep(kvp.keyExpr, kvp.valueExpr));
+            }
+
+            dictResult = dictResult.WithInitializer(InitializerExpression(SyntaxKind.CollectionInitializerExpression, ListCommaSep(dictItems)));
+
+            return dictResult;
         }
 
         /// <summary>

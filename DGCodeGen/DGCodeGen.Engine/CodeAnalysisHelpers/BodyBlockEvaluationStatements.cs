@@ -119,5 +119,10 @@ namespace DGCodeGen.Engine
         {
             return null;
         }
+
+        public override List<StatementSyntax> CreateRawStatements()
+        {
+            return Body.Statements.ToList();
+        }
     }
 }
